@@ -23,7 +23,7 @@ commands:
               sudo apt install software-properties-common
               sudo add-apt-repository --yes --update ppa:ansible/ansible
               sudo apt install ansible -y
-              
+
 jobs:
   build-frontend:
     docker:
@@ -145,7 +145,7 @@ jobs:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
+              --template-file .circleci/files/frontend.yml \
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"    
