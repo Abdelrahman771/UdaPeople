@@ -9,7 +9,7 @@ commands:
       - slack/notify:
           event: fail
           channel: cicd-pipeline
-          template: basic_fail_1  
+          template: basic_fail_1
             
 jobs:
   build-frontend:
@@ -274,14 +274,14 @@ jobs:
 #             then
 #               # your code here
 #             fi
-  notify_on_success:
+ notify_on_success:
     docker:
       - image: cimg/base:stable
     steps:
       - slack/notify:
           event: pass
           channel: cicd-pipeline
-          template: success_tagged_deploy_1           
+          template: success_tagged_deployment_1          
 
 workflows:
   default:
