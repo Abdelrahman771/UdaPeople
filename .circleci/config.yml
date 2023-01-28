@@ -248,13 +248,13 @@ jobs:
       - run:
           name: installtsc
           command: |
-            npm install typescript --save-dev
+            npm install
+            run npm install -g typescript
             
       - run:
           name: Run migrations
           command: |
             cd backend
-            npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
