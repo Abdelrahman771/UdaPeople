@@ -252,12 +252,9 @@ jobs:
             npm install
             npm audit fix --force --audit-level=critical
             npm audit fix --force --audit-level=critical
+             npm install -g typescript
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-      - run:
-          name: installtsc
-          command: |
-            npm install -g typescript
       - run:
           name: Send migration status to kvdb.io
           command: |
