@@ -249,7 +249,7 @@ jobs:
           name: installtsc
           command: |
             npm install
-            run npm install -g typescript
+            npm install -g typescript
             
       - run:
           name: Run migrations
