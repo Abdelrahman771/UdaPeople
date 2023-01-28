@@ -35,7 +35,7 @@ commands:
               sudo apt install -y nodejs
               
               # Use n version manager to use Node.js v13.8.0
-              sudo npm install --global n
+              sudo n  pm install --global n
               sudo n 13.8.0
 
     destroy-environment:
@@ -245,6 +245,11 @@ jobs:
       - checkout
       - install_awscli
       - install_nodejs
+      - run:
+          name: Run migrations
+          command: |
+            npm install typescript -g
+            
       - run:
           name: Run migrations
           command: |
