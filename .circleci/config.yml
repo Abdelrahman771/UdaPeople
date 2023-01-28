@@ -246,10 +246,6 @@ jobs:
       - install_awscli
       - install_nodejs
       - run:
-          name: installtsc
-          command: |
-            npm install -g typescript
-      - run:
           name: Run migrations
           command: |
             cd backend
@@ -258,6 +254,10 @@ jobs:
             npm audit fix --force --audit-level=critical
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
+      - run:
+          name: installtsc
+          command: |
+            npm install -g typescript
       - run:
           name: Send migration status to kvdb.io
           command: |
