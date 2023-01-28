@@ -250,13 +250,12 @@ jobs:
           command: |
             cd backend
             npm install
-            npm install typescript -g  
             npm audit fix --force --audit-level=critical
             npm audit fix --force --audit-level=critical
             npm audit fix
             npm audit fix
             npm audit fix
-            npm run migrations > migrations_dump.txt
+            npm run migrations
       - run:
           name: Send migration status to kvdb.io
           command: |
