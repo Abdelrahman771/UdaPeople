@@ -248,13 +248,14 @@ jobs:
       - run:
           name: installtsc
           command: |
-            npm install
             npm install -g typescript
-            
       - run:
           name: Run migrations
           command: |
             cd backend
+            npm install
+            npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
