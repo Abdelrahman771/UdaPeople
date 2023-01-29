@@ -186,36 +186,10 @@ jobs:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
-              --template-file .circl---
--  name: " Creates backend app directory "
-   file:
-     path: ~/backend-app
-     state: directory
-
--  name: "Unarchive backend files"
-   unarchive:
-       src: artifact.tar.gz
-       dest: ~/backend-app
-                   
--  name : "Installing Node Dependencies"
-   shell : |
-     cd ~/backend-app
-     npm i
--  name : "Executing Node app with PM2"
-   shell : |
-     cd ~/backend-app/dist
-     pm2 stop default
-     pm2 start main.js
-   register : execute_node
-
--  name : print message
-   debug :
-     msg : "{{ execute_node.stdout_lines }}"
-
-- name: "Configure pm2 to start as service"
-  shell: |
-     sudo su -c "env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu"
-     pm2 saveID="${CIRCLE_WORKFLOW_ID:0:7}"  
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
               
       - run:
           name: Ensure front-end infrastructure exist
@@ -439,10 +413,10 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
