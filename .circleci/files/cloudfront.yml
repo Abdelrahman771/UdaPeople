@@ -1,11 +1,10 @@
 Description: >
   Cloudfront distribution for UdaPeople.
-#JqLQW7B3RxDTq8R1JupQ
 Parameters:
   WorkflowID:
     Description: Unique identifier.
     Type: String
-
+#JqLQW7B3RxDTq8R1JupQ
 
 Resources:
   
