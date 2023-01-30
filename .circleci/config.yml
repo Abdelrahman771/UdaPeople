@@ -239,9 +239,11 @@ jobs:
 
   run-migrations:
     docker:
+      
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      -  install_awscli
       - restore_cache:
           keys: [backend-deps]
       - run:
@@ -257,9 +259,9 @@ jobs:
             cat ./backend/migrations_dump.txt
               curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
+      - destroy-environment
       - revert-migrations      
-
-     # Here's where you will add some code to rollback on failure      
+     
 
   deploy-frontend:
     docker:
@@ -328,27 +330,40 @@ jobs:
       - destroy-environment
       - revert-migrations  
 
-#   smoke-test:x // here is an intentional compile error. Remove the "x" and the backend should compile.
-#     docker:
-#       # Lightweight Docker image 
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Get backend url
-#           command: |
-#             # your code here
-#       - run:
-#           name: Backend smoke test.
-#           command: |
-#             # your code here
-#       - run:
-#           name: Frontend smoke test.
-#           command: |
-#             # yox // here is an intentional compile error. Remove the "x" and the backend should compile.pdate:
+  smoke-test:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_nodejs
+      - run:
+          name: Backend smoke test.
+          command: |
+            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            export API_URL=http://${BACKEND_PUBLIC_IP}:3030
+            if curl -s $API_URL/api/status | grep "ok"
+            then
+              exit 0
+            else
+              exit 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            FRONTEND_WEBSITE=http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com
+            if curl -s $FRONTEND_WEBSITE | grep "Welcome"
+            then
+              exit 1
+            else
+              exit 2
+            fi
+      - destroy-environment
+      - revert-migrations
+
 #     docker:
 #       # Docker image here that supports AWS CLI
 #     steps:
@@ -417,8 +432,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
