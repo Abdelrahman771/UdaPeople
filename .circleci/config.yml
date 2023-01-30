@@ -365,7 +365,7 @@ jobs:
       - revert-migrations
 
 #     docker:
-#       # Docker image here that supports AWS CLI
+#       # Docker image here that supports AWS CLIa
 #     steps:
 #       # Checkout code from git
 #       - run:
