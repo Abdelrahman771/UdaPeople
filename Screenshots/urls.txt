@@ -1,3 +1,0 @@
-https://github.com/Abdelrahman771/UdaPeople
-
-https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1
